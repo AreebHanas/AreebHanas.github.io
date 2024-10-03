@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+        <link href="styles.css" rel="stylesheet">
+        <title>Birth day wish for my princess </title>
+    </head>
+    <body>
+        <canvas id="canvas"></canvas>
+        <div class="bubbles"></div> 
+            <div class="container">
+                <div class="slider">
+                    
+                    <div class="slides" style="--image: url('./images/image5.jpg');">
+                        <div class="contant">
+                            <h3 class="last-text"> Happy birthday to my girl😊💗🥳</h3>
+                        </div>
+                    </div>
+
+                    <div class="slides" style="--image: url('./images/birthday_wish.jpg');">
+                    </div>
+    
+                    <div class="slides" style="--image: url('./images/image1.jpg');">
+                        <div class="contant">
+                            <h3> Many more happy returns of the day queeny🥰💖</h3>
+                            <p>Happy Birthday to the most amazing girl in my life! 🥰🎉 Every moment with you is a treasure, and I’m so grateful for all the laughter and love we share. May your day be filled with joy😊, surprises, and all the things that make you smile😊. Here’s to many more birthdays together! Love you always!💕 </p>
+                        </div>
+                    </div>
+    
+                    <div class="slides" style="--image: url('./images/image4.jpg');">
+                        <div class="contant">
+                            <h3> I am always with you🤗</h3>
+                            <p> No matter where life takes us, I’m always with you ma😊. Your happiness means everything to me 💕, I want my baby to always smile 😊💗</p>
+                        </div>
+                    </div>
+
+                    <div class="slides" style="--image: url('./images/image.png');">
+                        <div class="contant">
+                            <h3> I love you soo much baby ❤️</h3>
+                            <p>your a god's gift to me 🤗, I cant express how happy I feel to have you in my life😊🥰</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <span class="prev"></span>
+                    <span class="next"></span>
+                </div>
+            </div>
+        <script>
+            let next = document.querySelector('.next');
+            let prev = document.querySelector('.prev');
+            let slider = document.querySelector('.slider');
+
+            next.addEventListener('click', ()=>{
+                let slides = document.querySelectorAll('.slides');
+                slider.appendChild(slides[0]);
+            });
+
+            prev.addEventListener('click', ()=>{
+                let slides = document.querySelectorAll('.slides');
+                slider.prepend(slides[slides.length - 1]);
+            });
+        </script>
+
+        <script class="confetti">
+            let W = window.innerWidth;
+            let H = window.innerHeight;
+            const canvas = document.getElementById("canvas");
+            const context = canvas.getContext("2d");
+            const maxConfettis = 20;
+            const particles = [];
+
+            const possibleColors = [
+                "DodgerBlue",
+                "OliveDrab",
+                "Gold",
+                "Pink",
+                "SlateBlue",
+                "LightBlue",
+                "Gold",
+                "Violet",
+                "PaleGreen",
+                "SteelBlue",
+                "SandyBrown",
+                "Chocolate",
+                "Crimson"
+            ];
+
+            function randomFromTo(from, to) {
+                return Math.floor(Math.random() * (to - from + 1) + from);
+            }
+
+            function confettiParticle() {
+                this.x = Math.random() * W; // x
+                this.y = Math.random() * H - H; // y
+                this.r = randomFromTo(15, 50); // Increased radius for larger confetti
+                this.d = Math.random() * maxConfettis + 11;
+                this.color =
+                    possibleColors[Math.floor(Math.random() * possibleColors.length)];
+                this.tilt = Math.floor(Math.random() * 33) - 11;
+                this.tiltAngleIncremental = Math.random() * 0.07 + 0.05;
+                this.tiltAngle = 0;
+
+                this.draw = function() {
+                    context.beginPath();
+                    context.lineWidth = this.r / 2;
+                    context.strokeStyle = this.color;
+                    context.moveTo(this.x + this.tilt + this.r / 3, this.y);
+                    context.lineTo(this.x + this.tilt, this.y + this.tilt + this.r / 5);
+                    return context.stroke();
+                };
+            }
+
+            function Draw() {
+                const results = [];
+                requestAnimationFrame(Draw);
+                context.clearRect(0, 0, W, window.innerHeight);
+
+                for (var i = 0; i < maxConfettis; i++) {
+                    results.push(particles[i].draw());
+                }
+
+                let particle = {};
+                let remainingFlakes = 0;
+                for (var i = 0; i < maxConfettis; i++) {
+                    particle = particles[i];
+
+                    particle.tiltAngle += particle.tiltAngleIncremental;
+                    particle.y += (Math.cos(particle.d) + 3 + particle.r / 2) / 8;
+                    particle.tilt = Math.sin(particle.tiltAngle - i / 3) * 15;
+
+                    if (particle.y <= H) remainingFlakes++;
+
+                    if (particle.x > W + 30 || particle.x < -30 || particle.y > H) {
+                        particle.x = Math.random() * W;
+                        particle.y = -30;
+                        particle.tilt = Math.floor(Math.random() * 10) - 20;
+                    }
+                }
+
+                return results;
+            }
+
+            window.addEventListener(
+                "resize",
+                function() {
+                    W = window.innerWidth;
+                    H = window.innerHeight;
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                },
+                false
+            );
+
+            for (var i = 0; i < maxConfettis; i++) {
+                particles.push(new confettiParticle());
+            }
+
+            canvas.width = W;
+            canvas.height = H;
+            Draw();
+        </script>
+        <script class="bubble">
+            const bubbleContainer = document.querySelector('.bubbles');
+            const numberOfBubbles = 20; // Number of bubbles to generate
+            // Create bubble elements and append to the container
+            for (let i = 0; i < numberOfBubbles; i++) {
+                const bubble = document.createElement('span');
+                bubble.style.setProperty('--i', Math.random() * 30); // Randomize speed
+                bubble.style.left = Math.random() * 97 + 'vw'; // Randomize horizontal position
+                bubble.style.animationDelay = Math.random() * 5 + 's'; 
+                bubbleContainer.appendChild(bubble);
+            }
+        </script>
+    </body>
+</html>
